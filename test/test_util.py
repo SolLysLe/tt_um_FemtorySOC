@@ -11,12 +11,17 @@ pc = 0
 
 def set_uio_in_bit(dut, bit_index, value):
     """Set a specific bit of uio_in"""
-    current_value = dut.uio_in.value
+    current_value = int(dut.uio_in.value)  # Convert LogicArray to int
     if value:
         new_value = current_value | (1 << bit_index)
     else:
         new_value = current_value & ~(1 << bit_index)
     dut.uio_in.value = new_value
+
+def get_uio_in_bit(dut, bit_index):
+    """Get a specific bit of uio_in"""
+    current_value = int(dut.uio_in.value)
+    return (current_value >> bit_index) & 1
 
 async def reset(dut, latency=1, ui_in=0x80):
     # Reset
