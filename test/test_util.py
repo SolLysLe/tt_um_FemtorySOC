@@ -14,10 +14,7 @@ async def reset(dut, latency=1, ui_in=0x80):
     dut._log.info(f"Reset, latency {latency}")
     dut.ena.value = 1
     dut.ui_in.value = ui_in
-    dut.uio_in[0].value = 0
-    dut.uio_in[3].value = 0
-    dut.uio_in[6].value = 0
-    dut.uio_in[7].value = 0
+    dut.uio_in.value = 0x00
     if hasattr(dut, "qspi_data_in"):
         dut.qspi_data_in.value = 0
     dut.rst_n.value = 1
