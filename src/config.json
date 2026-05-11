@@ -74,25 +74,6 @@
 
   "//": "Only export pin area in LEF (without any connected nets)",
   "MAGIC_WRITE_LEF_PINONLY": 1,
-  
-  "//": "Macro",
-  "MACROS": {
-    "rf_top": {
-      "instances": {
-        "i_femtorv.i_rf": {
-          "location": [0.1, 45.0],
-          "orientation": "E"
-        }
-      },
-      "gds": ["dir::../macro/rf_top.gds.gz"],
-      "lef": ["dir::../macro/rf_top.lef"],
-      "lib": {
-        "*": ["dir::../macro/rf_top.lib"]
-      }
-    }
-  },
-
-  "PDN_MACRO_CONNECTIONS": ["i_femtorv.i_rf VPWR VGND VDPWR VGND"],
 
   "//": "Macro power",
   "//": "  Disable IR Drop report, useless anyway",
@@ -103,10 +84,4 @@
 
   "//": "  All met4 stripes are not connected internally, this causes PDN to crap out ...",
   "ERROR_ON_PDN_VIOLATIONS": 0,
-
-  "//": "  Config",
-  "FP_PDN_HORIZONTAL_LAYER": "met3",
-  "FP_MACRO_HORIZONTAL_HALO": "3",
-  "FP_MACRO_VERTICAL_HALO": "0",
-  "FP_PDN_VOFFSET": "10"
 }
