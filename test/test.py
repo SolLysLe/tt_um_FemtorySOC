@@ -121,6 +121,7 @@ async def test_start(dut):
   assert dut.spi_sck == 0
   assert dut.spi_cs.value == 0
   await ClockCycles(dut.clk, divider)
+  await ClockCycles(dut.clk, 5) # Chờ thêm 5 chu kỳ
   assert dut.spi_cs.value == 1
 
   await stop_nops()  
