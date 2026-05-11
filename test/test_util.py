@@ -9,15 +9,24 @@ from riscvmodel.regnames import x0, gp, tp, a0
 
 pc = 0
 
+def set_uio_in_bit(dut, bit_index, value):
+    """Set a specific bit of uio_in"""
+    current_value = dut.uio_in.value
+    if value:
+        new_value = current_value | (1 << bit_index)
+    else:
+        new_value = current_value & ~(1 << bit_index)
+    dut.uio_in.value = new_value
+
 async def reset(dut, latency=1, ui_in=0x80):
     # Reset
     dut._log.info(f"Reset, latency {latency}")
     dut.ena.value = 1
     dut.ui_in.value = ui_in
-    dut.uio_in[0].value = 0
-    dut.uio_in[3].value = 0
-    dut.uio_in[6].value = 0
-    dut.uio_in[7].value = 0
+    set_uio_in_bit(dut, 0, 0)  # uio_in[0] = 0
+    set_uio_in_bit(dut, 3, 0)  # uio_in[3] = 0
+    set_uio_in_bit(dut, 6, 0)  # uio_in[6] = 0
+    set_uio_in_bit(dut, 7, 0)  # uio_in[7] = 0
     if hasattr(dut, "qspi_data_in"):
         dut.qspi_data_in.value = 0
     dut.rst_n.value = 1
@@ -241,7 +250,7 @@ async def start_nops(dut):
     nop_task = cocotb.start_soon(nops_loop(dut))
 
     # This ensures that the nop task is actually started, so that it can be instantly stopped.
-    await Timer(2, "ps")
+    await Timer(2, unit="ps")
 
 async def stop_nops():
     global send_nops, nop_task
@@ -258,16 +267,16 @@ async def read_byte(dut, reg, expected_val):
       if dut.debug_uart_tx.value == 0:
           break
       else:
-          await Timer(5, "ns")
+          await Timer(5, unit="ns")
   assert dut.debug_uart_tx.value == 0
   bit_time = 250
-  await Timer(bit_time / 2, "ns")
+  await Timer(bit_time / 2, unit="ns")
   assert dut.debug_uart_tx.value == 0
   for i in range(8):
-      await Timer(bit_time, "ns")
+      await Timer(bit_time, unit="ns")
       assert dut.debug_uart_tx.value == (expected_val & 1)
       expected_val >>= 1
-  await Timer(bit_time, "ns")
+  await Timer(bit_time, unit="ns")
   assert dut.debug_uart_tx.value == 1
 
   await stop_nops()
@@ -327,7 +336,7 @@ async def set_all_outputs_to_peripheral(dut, peripheral_num):
 def set_pc(addr):
     global pc
     pc = addr
-    #print("Jump to", pc)
+    #print("Jump to", addr)
 
 def get_pc():
     global pc
