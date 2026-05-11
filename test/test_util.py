@@ -14,7 +14,10 @@ async def reset(dut, latency=1, ui_in=0x80):
     dut._log.info(f"Reset, latency {latency}")
     dut.ena.value = 1
     dut.ui_in.value = ui_in
-    dut.uio_in.value = 0x00
+    dut.uio_in[0].value = 0
+    dut.uio_in[3].value = 0
+    dut.uio_in[6].value = 0
+    dut.uio_in[7].value = 0
     if hasattr(dut, "qspi_data_in"):
         dut.qspi_data_in.value = 0
     dut.rst_n.value = 1
@@ -291,7 +294,7 @@ async def expect_store(dut, addr, bytes=4, allow_long_delay=False):
                     await ClockCycles(dut.clk, 1, False)
                 assert dut.qspi_clk_out.value == 1
                 assert dut.qspi_data_oe.value == 0xF
-                val |= int(dut.qspi_data_out.value) << (nibble_shift_order[j % 8])
+                val |= dut.qspi_data_out.value << (nibble_shift_order[j % 8])
                 await ClockCycles(dut.clk, 1, False)
                 assert select.value == (1 if j == bytes*2-1 else 0)
                 assert dut.qspi_clk_out.value == 0
