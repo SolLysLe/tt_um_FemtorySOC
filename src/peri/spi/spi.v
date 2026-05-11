@@ -1,6 +1,9 @@
 /* Copyright 2026 (c) Sollys Le
    SPDX-License-Identifier: Apache-2.0
 
+Author: Micheal Bell 2023-2025
+   Modifications: Sollys Le 2026
+
    A general SPI controller, with optional DC line for
    simple control of SPI LCDs.
    */
